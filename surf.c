@@ -175,6 +175,7 @@ static void spawn(Client *c, const Arg *a);
 static void msgext(Client *c, char type, const Arg *a);
 static void destroyclient(Client *c);
 static void cleanup(void);
+static void updatehistory(const char *u);
 
 /* GTK/WebKit */
 static WebKitWebView *newview(Client *c, WebKitWebView *rv);
@@ -231,6 +232,7 @@ static void togglefullscreen(Client *c, const Arg *a);
 static void togglecookiepolicy(Client *c, const Arg *a);
 static void toggleinspector(Client *c, const Arg *a);
 static void find(Client *c, const Arg *a);
+static void seturi(Client *c, const Arg *a);
 
 /* Buttons */
 static void clicknavigate(Client *c, const Arg *a, WebKitHitTestResult *h);
@@ -337,6 +339,7 @@ setup(void)
 
 	/* dirs and files */
 	cookiefile  = buildfile(cookiefile);
+	historyfile = buildfile(historyfile);
 	scriptfile  = buildfile(scriptfile);
 	cachedir    = buildpath(cachedir);
 	certdir     = buildpath(certdir);
@@ -979,6 +982,21 @@ handleplumb(Client *c, const char *uri)
 }
 
 void
+updatehistory(const char *u)
+{
+	FILE *f;
+	f = fopen(historyfile, "a+");
+
+	char b[20];
+	time_t now = time (0);
+	strftime (b, 20, "%Y-%m-%d-%H:%M:%S", localtime (&now));
+	fputs(b, f);
+
+	fprintf(f, "\t%s\n", u);
+	fclose(f);
+}
+
+void
 newwindow(Client *c, const Arg *a, int noembed)
 {
 	int i = 0;
@@ -1077,6 +1095,7 @@ cleanup(void)
 	close(pipein[0]);
 	close(pipeout[1]);
 	g_free(cookiefile);
+	g_free(historyfile);
 	g_free(scriptfile);
 	g_free(stylefile);
 	g_free(cachedir);
@@ -1522,6 +1541,7 @@ loadchanged(WebKitWebView *v, WebKitLoadEvent e, Client *c)
 		break;
 	case WEBKIT_LOAD_FINISHED:
 		seturiparameters(c, uri, loadfinished);
+		updatehistory(uri);
 		/* Disabled until we write some WebKitWebExtension for
 		 * manipulating the DOM directly.
 		evalscript(c, "document.documentElement.style.overflow = '%s'",
@@ -1948,6 +1968,13 @@ find(Client *c, const Arg *a)
 		if (strcmp(s, "") == 0)
 			webkit_find_controller_search_finish(c->finder);
 	}
+}
+
+void
+seturi(Client *c, const Arg *a)
+{
+	Arg arg = (Arg)SETHISTORYPROP(historyfile, "_SURF_GO", PROMPT_GO);
+	spawn(c, &arg);
 }
 
 void

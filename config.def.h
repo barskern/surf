@@ -8,6 +8,7 @@ static char *styledir       = "~/.config/surf/styles/";
 static char *certdir        = "~/.local/share/surf/certificates/";
 static char *cachedir       = "~/.cache/surf/";
 static char *cookiefile     = "~/.local/share/surf/cookies.txt";
+static char *historyfile    = "~/.local/share/surf/history.txt";
 static char *downloaddir    = "~/Nedlastinger/";
 
 /* Webkit default features */
@@ -79,6 +80,20 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
         } \
 }
 
+/* SETHISTORYPROP(historyfile, setprop, prompt)*/
+#define SETHISTORYPROP(h, s, p) { \
+        .v = (const char *[]){ "/bin/sh", "-c", \
+             "prop=\"$(" \
+             "   tac \"$2\"" \
+             " | cut -f 2" \
+             " | uniq" \
+             " | rofi -dmenu -i -p \"$4\" -w $1" \
+             ")\" " \
+             " && xprop -id $1 -f $3 8s -set $3 \"$prop\"", \
+             "surf-seturi", winid, h, s, p, NULL \
+        } \
+}
+
 /* DOWNLOAD(URI, referer) */
 #define DOWNLOAD(u, r) { \
         .v = (const char *[]){ "/bin/sh", "-c", \
@@ -136,7 +151,7 @@ static SiteSpecific certs[] = {
  */
 static Key keys[] = {
 	/* modifier              keyval          function    arg */
-	{ MODKEY,                GDK_KEY_g,      spawn,      SETPROP("_SURF_URI", "_SURF_GO", PROMPT_GO) },
+	{ MODKEY,                GDK_KEY_g,      seturi,     { 0 } },
 	{ MODKEY,                GDK_KEY_slash,  spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
 
 	{ 0,                     GDK_KEY_Escape, stop,       { 0 } },

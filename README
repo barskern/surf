@@ -13,6 +13,7 @@ Custom features
 - More vim-like keybinds (see updated manpage).
 - Use `duckduckgo.com` as a homepage.
 - Specify a custom download directory.
+- Simple history for visited websites.
 
 Requirements
 ------------
