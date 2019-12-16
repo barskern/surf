@@ -10,6 +10,7 @@ Custom features
 - Use [`rofi`](https://github.com/davatorium/rofi) instead of `dmenu` for
   interactive prompts.
 - Use `notify-send` to send status messages regarding downloads.
+- More vim-like keybinds (see updated manpage).
 
 Requirements
 ------------

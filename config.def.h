@@ -133,7 +133,6 @@ static SiteSpecific certs[] = {
 static Key keys[] = {
 	/* modifier              keyval          function    arg */
 	{ MODKEY,                GDK_KEY_g,      spawn,      SETPROP("_SURF_URI", "_SURF_GO", PROMPT_GO) },
-	{ MODKEY,                GDK_KEY_f,      spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
 	{ MODKEY,                GDK_KEY_slash,  spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
 
 	{ 0,                     GDK_KEY_Escape, stop,       { 0 } },
@@ -142,16 +141,16 @@ static Key keys[] = {
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_r,      reload,     { .i = 1 } },
 	{ MODKEY,                GDK_KEY_r,      reload,     { .i = 0 } },
 
-	{ MODKEY,                GDK_KEY_l,      navigate,   { .i = +1 } },
-	{ MODKEY,                GDK_KEY_h,      navigate,   { .i = -1 } },
+	{ MODKEY,                GDK_KEY_i,      navigate,   { .i = +1 } },
+	{ MODKEY,                GDK_KEY_o,      navigate,   { .i = -1 } },
 
 	/* vertical and horizontal scrolling, in viewport percentage */
 	{ MODKEY,                GDK_KEY_j,      scrollv,    { .i = +10 } },
 	{ MODKEY,                GDK_KEY_k,      scrollv,    { .i = -10 } },
-	{ MODKEY,                GDK_KEY_space,  scrollv,    { .i = +50 } },
+	{ MODKEY,                GDK_KEY_f,      scrollv,    { .i = +50 } },
 	{ MODKEY,                GDK_KEY_b,      scrollv,    { .i = -50 } },
-	{ MODKEY,                GDK_KEY_i,      scrollh,    { .i = +10 } },
-	{ MODKEY,                GDK_KEY_u,      scrollh,    { .i = -10 } },
+	{ MODKEY,                GDK_KEY_l,      scrollh,    { .i = +10 } },
+	{ MODKEY,                GDK_KEY_h,      scrollh,    { .i = -10 } },
 
 
 	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_j,      zoom,       { .i = -1 } },
