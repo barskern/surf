@@ -1079,6 +1079,7 @@ cleanup(void)
 	g_free(scriptfile);
 	g_free(stylefile);
 	g_free(cachedir);
+	g_free(certdir);
 	XCloseDisplay(dpy);
 }
 
