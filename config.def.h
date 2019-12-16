@@ -67,6 +67,7 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
 
 #define PROMPT_GO   "go"
 #define PROMPT_FIND "find"
+#define PROMPT_NAV  "nav"
 
 /* SETPROP(readprop, setprop, prompt)*/
 #define SETPROP(r, s, p) { \
@@ -145,6 +146,11 @@ static Key keys[] = {
 
 	{ MODKEY,                GDK_KEY_i,      navigate,   { .i = +1 } },
 	{ MODKEY,                GDK_KEY_o,      navigate,   { .i = -1 } },
+	// FIXME SETPROP cannot be used directly here as _SURF_NAV has to be the index
+	// in the navigation history of the element to go to, however now it will be
+	// the number including the full url. Perhaps add a parameter to SETPROP which
+	// can be used to process the returned value from rofi?
+	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_o,      selhist,    SETPROP("_SURF_HIST", "_SURF_NAV", PROMPT_NAV) },
 
 	/* vertical and horizontal scrolling, in viewport percentage */
 	{ MODKEY,                GDK_KEY_j,      scrollv,    { .i = +10 } },

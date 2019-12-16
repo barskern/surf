@@ -35,7 +35,7 @@
 #define LENGTH(x)               (sizeof(x) / sizeof(x[0]))
 #define CLEANMASK(mask)         (mask & (MODKEY|GDK_SHIFT_MASK))
 
-enum { AtomFind, AtomGo, AtomUri, AtomLast };
+enum { AtomFind, AtomGo, AtomUri, AtomHist, AtomNav, AtomLast };
 
 enum {
 	OnDoc   = WEBKIT_HIT_TEST_RESULT_CONTEXT_DOCUMENT,
@@ -225,6 +225,8 @@ static void zoom(Client *c, const Arg *a);
 static void scrollv(Client *c, const Arg *a);
 static void scrollh(Client *c, const Arg *a);
 static void navigate(Client *c, const Arg *a);
+static void selhist(Client *c, const Arg *a);
+static void navhist(Client *c, const Arg *a);
 static void stop(Client *c, const Arg *a);
 static void toggle(Client *c, const Arg *a);
 static void togglefullscreen(Client *c, const Arg *a);
@@ -328,6 +330,8 @@ setup(void)
 	atoms[AtomFind] = XInternAtom(dpy, "_SURF_FIND", False);
 	atoms[AtomGo] = XInternAtom(dpy, "_SURF_GO", False);
 	atoms[AtomUri] = XInternAtom(dpy, "_SURF_URI", False);
+	atoms[AtomHist] = XInternAtom(dpy, "_SURF_HIST", False);
+	atoms[AtomNav] = XInternAtom(dpy, "_SURF_NAV", False);
 
 	gtk_init(NULL, NULL);
 
@@ -1316,6 +1320,9 @@ processx(GdkXEvent *e, GdkEvent *event, gpointer d)
 				loaduri(c, &a);
 
 				return GDK_FILTER_REMOVE;
+			} else if(ev->atom == atoms[AtomNav]) {
+				a.v = getatom(c, AtomNav);
+				navhist(c, &a);
 			}
 		}
 	}
@@ -1404,6 +1411,7 @@ showview(WebKitWebView *v, Client *c)
 
 	setatom(c, AtomFind, "");
 	setatom(c, AtomUri, "about:blank");
+	setatom(c, AtomHist, "");
 }
 
 GtkWidget *
@@ -1878,6 +1886,63 @@ navigate(Client *c, const Arg *a)
 		webkit_web_view_go_back(c->view);
 	else if (a->i > 0)
 		webkit_web_view_go_forward(c->view);
+}
+
+void
+selhist(Client *c, const Arg *a) {
+	WebKitBackForwardList *lst;
+	WebKitBackForwardListItem *cur;
+	gint i;
+	GList *l;
+	gchar *out;
+	gchar *tmp;
+	gchar *line;
+
+	out = g_strdup("");
+
+	if(!(lst = webkit_web_view_get_back_forward_list(c->view)))
+		return;
+
+	l = g_list_reverse(webkit_back_forward_list_get_back_list(lst));
+	i = g_list_length(l);
+	for( ; l != NULL; l = l->next) {
+		line = g_strdup_printf("%d: %s\n", -i,
+		                       webkit_back_forward_list_item_get_original_uri(l->data));
+		tmp = g_strconcat(out, line, NULL);
+		g_free(out);
+		out = tmp;
+		i--;
+	}
+	g_list_free(l);
+
+	if((cur = webkit_back_forward_list_get_current_item(lst))) {
+		line = g_strdup_printf("%d: %s", 0,
+		                       webkit_back_forward_list_item_get_original_uri(cur));
+		tmp = g_strconcat(out, line, NULL);
+		g_free(out);
+		out = tmp;
+	}
+
+	i = 1;
+	for(l = webkit_back_forward_list_get_forward_list(lst); l != NULL; l = l->next) {
+		line = g_strdup_printf("\n%d: %s", i,
+		                       webkit_back_forward_list_item_get_original_uri(l->data));
+		tmp = g_strconcat(out, line, NULL);
+		g_free(out);
+		out = tmp;
+		i++;
+	}
+	g_list_free(l);
+
+	setatom(c, AtomHist, out);
+	g_free(out);
+	spawn(c, a);
+}
+
+void
+navhist(Client *c, const Arg *a) {
+	Arg aa = { .i = atoi(a->v) };
+	navigate(c, &aa);
 }
 
 void
