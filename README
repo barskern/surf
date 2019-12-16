@@ -11,6 +11,7 @@ Custom features
   interactive prompts.
 - Use `notify-send` to send status messages regarding downloads.
 - More vim-like keybinds (see updated manpage).
+- Use `duckduckgo.com` as a homepage.
 
 Requirements
 ------------
