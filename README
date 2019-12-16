@@ -7,6 +7,8 @@ Custom features
 
 - Use `~/.config`, `~/.local/share` and `~/.cache` for config, data and cache
   files.
+- Use [`rofi`](https://github.com/davatorium/rofi) instead of `dmenu` for
+  interactive prompts.
 
 Requirements
 ------------
