@@ -8,6 +8,7 @@ static char *styledir       = "~/.config/surf/styles/";
 static char *certdir        = "~/.local/share/surf/certificates/";
 static char *cachedir       = "~/.cache/surf/";
 static char *cookiefile     = "~/.local/share/surf/cookies.txt";
+static char *downloaddir    = "~/Nedlastinger/";
 
 /* Webkit default features */
 /* Highest priority value will be used.
@@ -81,11 +82,12 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
 /* DOWNLOAD(URI, referer) */
 #define DOWNLOAD(u, r) { \
         .v = (const char *[]){ "/bin/sh", "-c", \
-             "notify-send -a surf \"Downloading $4\";" \
-             "curl -g -L -J -O -A \"$1\" -b \"$2\" -c \"$2\" -e \"$3\" \"$4\"" \
-             "&& notify-send -a surf \"Successfully downloaded $4\"", \
-             "|| notify-send -a surf \"Unable to download $4\"", \
-             useragent, cookiefile, r, u, NULL \
+             "notify-send -i emblem-downloads -a surf \"Download starting\" \"$4\nto $5\";" \
+             "cd \"$5\";" \
+             "msg=$(curl --no-progress-meter -gLJO -A \"$1\" -b \"$2\" -c \"$2\" -e \"$3\" \"$4\" 2>&1)" \
+             " && notify-send -i emblem-success -a surf \"Download succeeded\" \"$msg\"" \
+             " || notify-send -i emblem-error -a surf \"Download failed\" \"$msg\"", \
+             "surf-download", useragent, cookiefile, r, u, downloaddir, NULL \
         } \
 }
 
