@@ -1,0 +1,12 @@
+[Desktop Entry]
+Name=Surf
+Name[en_US]=Surf
+GenericName=Web Browser
+GenericName[en_US]=Web Browser
+Comment=Web Browser
+Exec=surf
+Terminal=false
+Type=Application
+MimeType=text/html;text/xml;application/xhtml+xml;application/vnd.mozilla.xul+xml;text/mml;x-scheme-handler/http;x-scheme-handler/https;
+Categories=Network;WebBrowser;
+Keywords=web;browser;internet;
