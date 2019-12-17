@@ -119,10 +119,10 @@ static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
         } \
 }
 
-/* VIDEOPLAY(URI) */
-#define VIDEOPLAY(u) {\
+/* VIDEOPLAY(URI, args) */
+#define VIDEOPLAY(u, a) {\
         .v = (const char *[]){ "/bin/sh", "-c", \
-             "mpv --really-quiet \"$0\"", u, NULL \
+             "mpv --really-quiet $1 \"$0\"", u, a, NULL \
         } \
 }
 
@@ -158,7 +158,8 @@ static Key keys[] = {
 	{ MODKEY,                GDK_KEY_slash,  spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
 	{ MODKEY,                GDK_KEY_s,      setsearch,    { 0 } },
 
-	{ MODKEY,                GDK_KEY_w,      playexternal, { 0 } },
+	{ MODKEY,                GDK_KEY_w,      playexternal, { .v = "" } },
+	{ MODKEY|GDK_SHIFT_MASK, GDK_KEY_w,      playexternal, { .v = "--no-video --force-window" } },
 
 	{ 0,                     GDK_KEY_Escape, stop,       { 0 } },
 	{ MODKEY,                GDK_KEY_c,      stop,       { 0 } },

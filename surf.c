@@ -2029,7 +2029,7 @@ clickexternplayer(Client *c, const Arg *a, WebKitHitTestResult *h)
 {
 	Arg arg;
 
-	arg = (Arg)VIDEOPLAY(webkit_hit_test_result_get_media_uri(h));
+	arg = (Arg)VIDEOPLAY(webkit_hit_test_result_get_media_uri(h), "");
 	spawn(c, &arg);
 }
 
@@ -2038,7 +2038,7 @@ playexternal(Client *c, const Arg *a)
 {
 	Arg arg;
 
-	arg = (Arg)VIDEOPLAY(geturi(c));
+	arg = (Arg)VIDEOPLAY(geturi(c), a->v);
 	spawn(c, &arg);
 }
 
