@@ -1,15 +1,17 @@
 #define HOMEPAGE "https://duckduckgo.com/"
 
 /* modifier 0 means no modifier */
-static int surfuseragent    = 1;  /* Append Surf version to default WebKit user agent */
-static char *fulluseragent  = ""; /* Or override the whole user agent string */
-static char *scriptfile     = "~/.config/surf/script.js";
-static char *styledir       = "~/.config/surf/styles/";
-static char *certdir        = "~/.local/share/surf/certificates/";
-static char *cachedir       = "~/.cache/surf/";
-static char *cookiefile     = "~/.local/share/surf/cookies.txt";
-static char *historyfile    = "~/.local/share/surf/history.txt";
-static char *downloaddir    = "~/Nedlastinger/";
+static int surfuseragent       = 1;  /* Append Surf version to default WebKit user agent */
+static char *fulluseragent     = ""; /* Or override the whole user agent string */
+static char *scriptfile        = "~/.config/surf/script.js";
+static char *styledir          = "~/.config/surf/styles/";
+static char *certdir           = "~/.local/share/surf/certificates/";
+static char *cachedir          = "~/.cache/surf/";
+static char *cookiefile        = "~/.local/share/surf/cookies.txt";
+static char *urihistoryfile    = "~/.local/share/surf/uri-history.txt";
+static char *searchhistoryfile = "~/.local/share/surf/search-history.txt";
+static char *downloaddir       = "~/Nedlastinger/";
+static char *searchurl         = "https://duckduckgo.com/?q=%s";
 
 /* Webkit default features */
 /* Highest priority value will be used.
@@ -67,8 +69,9 @@ static int winsize[] = { 800, 600 };
 static WebKitFindOptions findopts = WEBKIT_FIND_OPTIONS_CASE_INSENSITIVE |
                                     WEBKIT_FIND_OPTIONS_WRAP_AROUND;
 
-#define PROMPT_GO   "go"
-#define PROMPT_FIND "find"
+#define PROMPT_GO     "go"
+#define PROMPT_FIND   "find"
+#define PROMPT_SEARCH "search"
 
 /* SETPROP(readprop, setprop, prompt)*/
 #define SETPROP(r, s, p) { \
@@ -153,6 +156,7 @@ static Key keys[] = {
 	/* modifier              keyval          function    arg */
 	{ MODKEY,                GDK_KEY_g,      seturi,     { 0 } },
 	{ MODKEY,                GDK_KEY_slash,  spawn,      SETPROP("_SURF_FIND", "_SURF_FIND", PROMPT_FIND) },
+	{ MODKEY,                GDK_KEY_s,      setsearch,    { 0 } },
 
 	{ MODKEY,                GDK_KEY_w,      playexternal, { 0 } },
 

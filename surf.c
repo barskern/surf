@@ -35,7 +35,7 @@
 #define LENGTH(x)               (sizeof(x) / sizeof(x[0]))
 #define CLEANMASK(mask)         (mask & (MODKEY|GDK_SHIFT_MASK))
 
-enum { AtomFind, AtomGo, AtomUri, AtomLast };
+enum { AtomFind, AtomSearch, AtomGo, AtomUri, AtomLast };
 
 enum {
 	OnDoc   = WEBKIT_HIT_TEST_RESULT_CONTEXT_DOCUMENT,
@@ -175,7 +175,7 @@ static void spawn(Client *c, const Arg *a);
 static void msgext(Client *c, char type, const Arg *a);
 static void destroyclient(Client *c);
 static void cleanup(void);
-static void updatehistory(const char *u);
+static void updatehistory(const char* h, const char *u);
 
 /* GTK/WebKit */
 static WebKitWebView *newview(Client *c, WebKitWebView *rv);
@@ -234,6 +234,8 @@ static void toggleinspector(Client *c, const Arg *a);
 static void find(Client *c, const Arg *a);
 static void seturi(Client *c, const Arg *a);
 static void playexternal(Client *c, const Arg *a);
+static void search(Client *c, const Arg *a);
+static void setsearch(Client *c, const Arg *a);
 
 /* Buttons */
 static void clicknavigate(Client *c, const Arg *a, WebKitHitTestResult *h);
@@ -329,6 +331,7 @@ setup(void)
 
 	/* atoms */
 	atoms[AtomFind] = XInternAtom(dpy, "_SURF_FIND", False);
+	atoms[AtomSearch] = XInternAtom(dpy, "_SURF_SEARCH", False);
 	atoms[AtomGo] = XInternAtom(dpy, "_SURF_GO", False);
 	atoms[AtomUri] = XInternAtom(dpy, "_SURF_URI", False);
 
@@ -339,12 +342,13 @@ setup(void)
 	curconfig = defconfig;
 
 	/* dirs and files */
-	cookiefile  = buildfile(cookiefile);
-	historyfile = buildfile(historyfile);
-	scriptfile  = buildfile(scriptfile);
-	cachedir    = buildpath(cachedir);
-	certdir     = buildpath(certdir);
-	downloaddir = buildpath(downloaddir);
+	cookiefile        = buildfile(cookiefile);
+	urihistoryfile    = buildfile(urihistoryfile);
+	searchhistoryfile = buildfile(searchhistoryfile);
+	scriptfile        = buildfile(scriptfile);
+	cachedir          = buildpath(cachedir);
+	certdir           = buildpath(certdir);
+	downloaddir       = buildpath(downloaddir);
 
 	gdkkb = gdk_seat_get_keyboard(gdk_display_get_default_seat(gdpy));
 
@@ -580,6 +584,27 @@ loaduri(Client *c, const Arg *a)
 		webkit_web_view_load_uri(c->view, url);
 		updatetitle(c);
 	}
+
+	g_free(url);
+}
+
+void
+setsearch(Client *c, const Arg *a)
+{
+	Arg arg = (Arg)SETHISTORYPROP(searchhistoryfile, "_SURF_SEARCH", PROMPT_SEARCH);
+	spawn(c, &arg);
+}
+
+void
+search(Client *c, const Arg *a)
+{
+	Arg arg;
+	char *url;
+
+	updatehistory(searchhistoryfile, a->v);
+	url = g_strdup_printf(searchurl, a->v);
+	arg.v = url;
+	loaduri(c, &arg);
 
 	g_free(url);
 }
@@ -985,10 +1010,10 @@ handleplumb(Client *c, const char *uri)
 }
 
 void
-updatehistory(const char *u)
+updatehistory(const char* h, const char *u)
 {
 	FILE *f;
-	f = fopen(historyfile, "a+");
+	f = fopen(h, "a+");
 
 	char b[20];
 	time_t now = time (0);
@@ -1098,7 +1123,8 @@ cleanup(void)
 	close(pipein[0]);
 	close(pipeout[1]);
 	g_free(cookiefile);
-	g_free(historyfile);
+	g_free(urihistoryfile);
+	g_free(searchhistoryfile);
 	g_free(scriptfile);
 	g_free(stylefile);
 	g_free(cachedir);
@@ -1336,6 +1362,11 @@ processx(GdkXEvent *e, GdkEvent *event, gpointer d)
 				find(c, NULL);
 
 				return GDK_FILTER_REMOVE;
+			} else if (ev->atom == atoms[AtomSearch]) {
+				a.v = getatom(c, AtomSearch);
+				search(c, &a);
+
+				return GDK_FILTER_REMOVE;
 			} else if (ev->atom == atoms[AtomGo]) {
 				a.v = getatom(c, AtomGo);
 				loaduri(c, &a);
@@ -1544,7 +1575,7 @@ loadchanged(WebKitWebView *v, WebKitLoadEvent e, Client *c)
 		break;
 	case WEBKIT_LOAD_FINISHED:
 		seturiparameters(c, uri, loadfinished);
-		updatehistory(uri);
+		updatehistory(urihistoryfile, uri);
 		/* Disabled until we write some WebKitWebExtension for
 		 * manipulating the DOM directly.
 		evalscript(c, "document.documentElement.style.overflow = '%s'",
@@ -1976,7 +2007,7 @@ find(Client *c, const Arg *a)
 void
 seturi(Client *c, const Arg *a)
 {
-	Arg arg = (Arg)SETHISTORYPROP(historyfile, "_SURF_GO", PROMPT_GO);
+	Arg arg = (Arg)SETHISTORYPROP(urihistoryfile, "_SURF_GO", PROMPT_GO);
 	spawn(c, &arg);
 }
 

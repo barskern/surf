@@ -15,7 +15,7 @@ Custom features
 - Specify a custom download directory.
 - Simple history for visited websites.
 - Hotkey to play video in external player.
-- All bang-searches are forwarded to [`duckduckgo.com`](https://duckduckgo.com/bang).
+- Add search through `duckduckgo.com` with history.
 
 Requirements
 ------------
