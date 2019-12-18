@@ -4,6 +4,7 @@ Name[en_US]=Surf
 GenericName=Web Browser
 GenericName[en_US]=Web Browser
 Comment=Web Browser
+Icon=surf
 Exec=surf
 Terminal=false
 Type=Application

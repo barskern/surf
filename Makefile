@@ -69,11 +69,15 @@ install: all
 	mkdir -p $(DESTDIR)$(APPDIR)
 	cp -f surf.desktop $(DESTDIR)$(APPDIR)/surf.desktop
 	chmod 644 $(DESTDIR)$(APPDIR)/surf.desktop
+	mkdir -p $(DESTDIR)$(ICONDIR)
+	cp -f surf.png $(DESTDIR)$(ICONDIR)/surf.png
+	chmod 644 $(DESTDIR)$(ICONDIR)/surf.png
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/surf
 	rm -f $(DESTDIR)$(MANPREFIX)/man1/surf.1
 	rm -f $(DESTDIR)$(APPDIR)/surf.desktop
+	rm -f $(DESTDIR)$(ICONDIR)/surf.png
 	rm -f $(DESTDIR)$(LIBDIR)/libsurf-webext.so
 	- rmdir $(DESTDIR)$(LIBDIR)
 
