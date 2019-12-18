@@ -23,7 +23,7 @@ options:
 .c.o:
 	$(CC) $(SURFCFLAGS) $(CFLAGS) -c $<
 
-config.h:
+config.h: config.def.h
 	cp config.def.h $@
 
 $(OBJ): config.h common.h config.mk
