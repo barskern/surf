@@ -8,6 +8,7 @@ PREFIX = /usr/local
 MANPREFIX = $(PREFIX)/share/man
 LIBPREFIX = $(PREFIX)/lib
 LIBDIR = $(LIBPREFIX)/surf
+APPDIR = $(PREFIX)/share/applications
 
 X11INC = `pkg-config --cflags x11`
 X11LIB = `pkg-config --libs x11`

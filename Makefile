@@ -66,10 +66,14 @@ install: all
 	mkdir -p $(DESTDIR)$(MANPREFIX)/man1
 	sed "s/VERSION/$(VERSION)/g" < surf.1 > $(DESTDIR)$(MANPREFIX)/man1/surf.1
 	chmod 644 $(DESTDIR)$(MANPREFIX)/man1/surf.1
+	mkdir -p $(DESTDIR)$(APPDIR)
+	cp -f surf.desktop $(DESTDIR)$(APPDIR)/surf.desktop
+	chmod 644 $(DESTDIR)$(APPDIR)/surf.desktop
 
 uninstall:
 	rm -f $(DESTDIR)$(PREFIX)/bin/surf
 	rm -f $(DESTDIR)$(MANPREFIX)/man1/surf.1
+	rm -f $(DESTDIR)$(APPDIR)/surf.desktop
 	rm -f $(DESTDIR)$(LIBDIR)/libsurf-webext.so
 	- rmdir $(DESTDIR)$(LIBDIR)
 
