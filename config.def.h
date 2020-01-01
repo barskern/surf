@@ -11,7 +11,7 @@ static char *cookiefile        = "~/.local/share/surf/cookies.txt";
 static char *urihistoryfile    = "~/.local/share/surf/uri-history.txt";
 static char *searchhistoryfile = "~/.local/share/surf/search-history.txt";
 static char *downloaddir       = "~/Nedlastinger/";
-static char *searchurl         = "https://duckduckgo.com/?q=%s";
+static char *searchurl         = "https://duckduckgo.com/html?q=%s";
 
 /* Webkit default features */
 /* Highest priority value will be used.
