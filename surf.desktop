@@ -1,8 +1,8 @@
 [Desktop Entry]
 Name=Surf
-Name[en_US]=Surf
 GenericName=Web Browser
 GenericName[en_US]=Web Browser
+GenericName[nb]=Nettleser
 Comment=Web Browser
 Icon=surf
 Exec=surf
