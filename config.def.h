@@ -61,10 +61,13 @@ static UriParameters uriparams[] = {
 	  [JavaScript] = { { .i = 0 }, 1 },
 	  [Plugins]    = { { .i = 0 }, 1 },
 	}, },
-	{ "://git\\.logntnu\\.no(/|$)", {
+	{ "://(traefik|git)\\.logntnu\\.no(/|$)", {
 	  [JavaScript] = { { .i = 1 }, 1 },
 	}, },
 	{ "://gitlab\\.com(/|$)", {
+	  [JavaScript] = { { .i = 1 }, 1 },
+	}, },
+	{ "://github\\.com(/|$)", {
 	  [JavaScript] = { { .i = 1 }, 1 },
 	}, },
 };
