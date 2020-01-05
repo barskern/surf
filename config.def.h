@@ -70,6 +70,9 @@ static UriParameters uriparams[] = {
 	{ "://github\\.com(/|$)", {
 	  [JavaScript] = { { .i = 1 }, 1 },
 	}, },
+	{ "://crates\\.io(/|$)", {
+	  [JavaScript] = { { .i = 1 }, 1 },
+	}, },
 };
 
 /* default window size: width, height */
