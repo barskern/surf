@@ -67,7 +67,7 @@ static UriParameters uriparams[] = {
 	{ "://(hub\\.docker|gitlab|github)\\.com(/|$)", {
 	  [JavaScript] = { { .i = 1 }, 1 },
 	}, },
-	{ "://github\\.com(/|$)", {
+	{ "(://|\\.)ntnu\\.no(/|$)", {
 	  [JavaScript] = { { .i = 1 }, 1 },
 	}, },
 	{ "://crates\\.io(/|$)", {
