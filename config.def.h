@@ -64,7 +64,7 @@ static UriParameters uriparams[] = {
 	{ "(://|\\.)logntnu\\.no(/|$)", {
 	  [JavaScript] = { { .i = 1 }, 1 },
 	}, },
-	{ "://gitlab\\.com(/|$)", {
+	{ "://(hub\\.docker|gitlab|github)\\.com(/|$)", {
 	  [JavaScript] = { { .i = 1 }, 1 },
 	}, },
 	{ "://github\\.com(/|$)", {
